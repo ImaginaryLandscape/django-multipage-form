@@ -1,0 +1,36 @@
+label.required::after {
+    content: "*";
+    color: red;
+}
+.multipage_summary {
+    width: 40%;
+    margin-bottom: 10px;
+    border-top: 1px solid black;
+}
+.summary_section {
+    display: flex;
+    margin: 5px 0px 5px 5px;
+    border-bottom: 1px solid black;
+}
+.summary_left {
+    flex-basis: 90%;
+}
+.summary_form_name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+.summary_fields {
+    margin-bottom: 10px;
+}
+.summary_field {
+    font-weight: bold;
+}
+.summary_edit {
+    flex-basis: 10%;
+}
+.multipage_summary:after, .summary_section:after {
+    content: "";
+    display: table;
+    clear: both;
+}

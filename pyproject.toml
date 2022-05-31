@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "multipage-form"
+version = "1.0.0"
+description = "Django app supporting model forms with input fields that can be spread across multiple pages"
+homepage = "https://github.com/ImaginaryLandscape/django-multipage-form"
+readme = "README.md"
+authors = ["Imagescape <info@imagescape.com>"]
+maintainers = ["Noel Taylor <ntaylor@imagescape.com>"]
+license = "MIT"
+classifiers=[
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+]
+include = [
+    "LICENSE",
+    "CHANGELOG.md",
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

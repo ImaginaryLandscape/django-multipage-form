@@ -1,0 +1,19 @@
+<div class="multipage_summary">
+{% for form_name, fields in summary %}
+<div class="summary_section">
+  <div class="summary_left">
+    <div class="summary_form_name">
+      {{ form_name }}
+    </div>
+    <div class="summary_fields">
+      {% for field_name, value in fields %}
+      <span class="summary_field">{{ field_name }}:</span><span class="summary_value"> {{ value }}</span><br>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="summary_edit">
+    <a href="?p={{ forloop.counter0 }}">Edit</a>
+  </div>
+</div>
+{% endfor %}
+</div>

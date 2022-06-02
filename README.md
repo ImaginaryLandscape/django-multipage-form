@@ -1,30 +1,26 @@
 # Django Multipage ModelForm
 
-This package was designed to aid in the construction of Django model
-forms that can be spread over more than a single page.  It contains the
-"multipage_form" app as well as an example project ("job_application")
-to demonstrate its use.
-
-It assumes basic familiarity with Django.
+This app helps in the construction of Django model forms that span more
+than a single page.
 
 
 ## Features
 
 The "multipage_form" app helps you to separate sections of a long model
 form across several pages.  For example, a "job application" form might
-have a section where applicants enter their personal information (name,
-email, etc.), another for relevant employment expeience, and so on.
+have a section where applicants enter their personal information,
+another for employment expeience, and so on.
 
-The app also allows you to implement different branches or "routes"
-through the progression of form pages.  Two users who respond in
-different ways on a given page may then be routed to different pages,
-depending on the values they entered.
+The app allows you to implement different branches or "routes" through
+the progression of form pages.  Two users who respond in different ways
+on a given page may then be routed to different pages, depending the
+values entered.
 
-Finally, the app also provides tools that allow the user to return to a
-form-page they have already completed, where they can edit their
-responses.  There is also a tool to produce a summary of all fields
-entered, allowing the user to review their responses before the final
-submit button is clicked.
+The app also provides a tool that allows the user to return to a form
+page they have already completed, and a related tool that generates a
+summary of all completed form pages. These features allow the user to
+review and edit their responses before the final submit button is
+clicked.
 
 
 ## System Requirements
@@ -32,56 +28,41 @@ submit button is clicked.
 Python 3
 
 
+## Example Project
+
+The text below makes reference to an example project that demonstrates
+the use of the "multipage_form" app.  That project implements a job
+application form, and is available at:
+
+    https://github.com/ImaginaryLandscape/multipage-form-demo
+
+
 ## Installation
 
-Create and activate a python 3 virtual environment, and install
-dependencies from the "requirements.txt" file:
+- Add this package to your "pyproject.toml" file:
 
-```bash
-(new_virtual_env)$ pip install -r requirements.txt
-```
+    [tool.poetry.dependencies]
+    ...
+    multipage-form = {git = "https://github.com/ImaginaryLandscape/django-multipage-form.git", branch = "main"}
 
-This should install Django 3.2 (the only requirement).
+ or "requirements.txt":
 
+    -e git+git@github.com:ImaginaryLandscape/django-multipage-form.git@main#egg=multipage_form
 
-## Configuration
+- Add it to your "INSTALLED_APPS" in "settings.py":
 
-Run migrations:
+    INSTALLED_APPS = [
+        ...
+        'multipage_form'
+        ...
+    ]
 
-```bash
-(new_virtual_env)$ ./manage.py migrate
-Operations to perform:
-  Apply all migrations: admin, auth, contenttypes, job_application, multipage_form, sessions
-Running migrations:
-  Applying multipage_form.0001_initial... OK
-  Applying job_application.0001_initial... OK
-  Applying job_application.0002_auto_20220211_0317... OK
-```
+- Run "migrate":
 
-### Webpage
-
-You should now be able to run the project with Django's built-in
-`runserver` command on port 8000 (or any available port).
-
-```bash
-(new_virtual_env)$ ./manage.py runserver 8000
-```
-
-You should then be able to use the app in your browser at
-`localhost:8000`.  Fill in form fields with test data and have fun.
+    (virtual_env)$ ./manage.py migrate
 
 
-### Admin
-
-You should also be able to log into the admin at
-`localhost:8000/admin`.
-
-Use the username "admin" and the password "1234" to log in as a
-superuser that was created when migrations were run.  Form submissions
-should appear in the admin under the "job_application" app.
-
-
-## Use in Your Own Projects
+## Usage
 
 ### The Model
 
@@ -205,16 +186,17 @@ method like this:
             self.fields["my_field"].required = True
 
 Since the nature of the multipage form might require you to override the
-`__init__()` method on most or all of your child forms, we offer a
+`__init__()` method on most or all of your child forms, the app offers a
 convenience feature.  If you define a `required_fields` list on the
 child form, the app will automatically make those fields required at the
 form level. The value of this field is normally a list of those field
 names that should be required in the form.  However, using the string
 literal "`__all__`" as the value will cause all fields listed in the
 `fields` attribute of the nested `Meta` subclass to be made required.
+See, for example, the definition of `class JobApplicationForm` above.
 
 
-##### other configuration
+##### Other Configuration
 
 Aside from the special attributes discussed above, you should implement
 futher form configuration as you would on a normal Django model form.
@@ -306,8 +288,8 @@ to your template.
 #### History
 
 The names of all form pages that the user has completed so far can be
-displayed as a series of hyperlinks, allowing the user to easily jump
-back and forth to make further changes.  The example project has:
+displayed as a series of hyperlinks, allowing the user to jump back and
+forth to make further changes.  The example project has:
 
     {% get_history as links %}
     {% if links %}

@@ -23,9 +23,10 @@ review and edit their responses before the final submit button is
 clicked.
 
 
-## System Requirements
+## Requirements
 
 Python 3
+Django 3.2
 
 
 ## Example Project

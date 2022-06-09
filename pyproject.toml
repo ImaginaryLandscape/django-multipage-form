@@ -1,13 +1,28 @@
 [tool.poetry]
 name = "multipage-form"
 version = "1.0.0"
-description = "Django app supporting model forms with input fields that can be spread across multiple pages"
+description = "Django app supporting model forms that can span multiple pages"
 homepage = "https://github.com/ImaginaryLandscape/django-multipage-form"
 readme = "README.md"
 authors = ["Imagescape <info@imagescape.com>"]
 maintainers = ["Noel Taylor <ntaylor@imagescape.com>"]
 license = "MIT"
+packages = [ { include = "multipage_form" } ]
+repository = "https://gitlab.com/ImaginaryLandscape/django-multipage-form"
+keywords = [ "django", "forms", "multipage" ]
 classifiers=[
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3.4",
     "Programming Language :: Python :: 3.5",
     "Programming Language :: Python :: 3.6",
@@ -15,9 +30,9 @@ classifiers=[
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
-    "Framework :: Django",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4.0",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Internet :: WWW/HTTP :: Site Management",
 ]
 include = [
     "LICENSE",

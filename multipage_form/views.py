@@ -40,7 +40,6 @@ class MultipageFormView(FormView):
     def dispatch(self, request, *args, **kwargs):
         if not request.session.session_key:
             request.session.create()
-        print("WE ARE IN dispatch() and session id is '%s'" % request.session.session_key)
         session_key = request.session.session_key
 
         # Get the instance for this session, if there is one.

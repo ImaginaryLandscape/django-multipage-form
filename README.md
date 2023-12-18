@@ -25,8 +25,8 @@ clicked.
 
 ## Requirements
 
-Python 3
-Django 3.2
+- Python 3
+- Django 3.2
 
 
 ## Example Project
@@ -42,25 +42,32 @@ application form, and is available at:
 
 - Add this package to your "pyproject.toml" file:
 
+    ```toml
     [tool.poetry.dependencies]
-    ...
     multipage-form = {git = "https://github.com/ImaginaryLandscape/django-multipage-form.git", branch = "main"}
+    ```
 
- or "requirements.txt":
+    or "requirements.txt":
 
+    ```
     -e git+git@github.com:ImaginaryLandscape/django-multipage-form.git@main#egg=multipage_form
+    ```
 
 - Add it to your "INSTALLED_APPS" in "settings.py":
 
+    ```py
     INSTALLED_APPS = [
         ...
         'multipage_form'
         ...
     ]
+    ```
 
 - Run "migrate":
 
+    ```
     (virtual_env)$ ./manage.py migrate
+    ```
 
 
 ## Usage
@@ -78,19 +85,20 @@ The other fields on your model should be -- for the most part -- those
 fields that will be populated by user-entered data.  The
 "job_application" example project has:
 
+```py
+from django.db import models
+from multipage_form.models import MultipageModel
 
-    from django.db import models
-    from multipage_form.models import MultipageModel
-
-    class JobApplication(MultipageModel):
-        # stage 1 fields
-        first_name = models.CharField(max_length=20, blank=True)
-        middle_name = models.CharField(max_length=20, blank=True)
-        last_name = models.CharField(max_length=20, blank=True)
-        # stage 2 fields
-        education_level = models.CharField(max_length=20, blank=True)
-        year_graduated = models.CharField(max_length=4, blank=True)
-        ...
+class JobApplication(MultipageModel):
+    # stage 1 fields
+    first_name = models.CharField(max_length=20, blank=True)
+    middle_name = models.CharField(max_length=20, blank=True)
+    last_name = models.CharField(max_length=20, blank=True)
+    # stage 2 fields
+    education_level = models.CharField(max_length=20, blank=True)
+    year_graduated = models.CharField(max_length=4, blank=True)
+    ...
+```
 
 
 Notice that `blank=True` is passed to all the fields above.  With the
@@ -116,23 +124,24 @@ be the individual page form classes that define those fields necessary
 to populate one "chunk" of the model.  These nested form classes should
 inherit from the `ChildForm` class.  The example project has:
 
-    ...
-    from multipage_form.forms import MultipageForm, ChildForm
-    from .models import JobApplication
+```py
+...
+from multipage_form.forms import MultipageForm, ChildForm
+from .models import JobApplication
 
-    class JobApplicationForm(MultipageForm):
-        model = JobApplication
-        starting_form = "Stage1Form"
+class JobApplicationForm(MultipageForm):
+    model = JobApplication
+    starting_form = "Stage1Form"
 
-        class Stage1Form(ChildForm):
-            next_form_class = "Stage2Form"
-            display_name = "Personal Info"
-            required_fields = ["first_name", "last_name"]
+    class Stage1Form(ChildForm):
+        next_form_class = "Stage2Form"
+        display_name = "Personal Info"
+        required_fields = ["first_name", "last_name"]
 
-            class Meta:
-                fields = ["first_name", "last_name"]
-    ...
-
+        class Meta:
+            fields = ["first_name", "last_name"]
+...
+```
 
 Note that the parent form defines two attrbutes. The `model` attribute
 points to the model class discussed above, while the value of
@@ -181,10 +190,12 @@ fields must be made required at the form level.  To accomplish this in a
 normal, single-page form, you would override the form's `__init__()`
 method like this:
 
-    class MyForm(ModelForm):
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields["my_field"].required = True
+```py
+class MyForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["my_field"].required = True
+```
 
 Since the nature of the multipage form might require you to override the
 `__init__()` method on most or all of your child forms, the app offers a
@@ -217,10 +228,12 @@ that inherits from the `MultipageFormView` class (which itself is a
 subclass of Django's `FormView`).  Beyond that, the view can have a
 fairly simple implementation.  The example project has:
 
-    class JobApplicationView(MultipageFormView):
-        template_name = 'job_application/job_application.html'
-        form_class = JobApplicationForm
-        success_url = reverse_lazy("job_application:thank_you")
+```py
+class JobApplicationView(MultipageFormView):
+    template_name = 'job_application/job_application.html'
+    form_class = JobApplicationForm
+    success_url = reverse_lazy("job_application:thank_you")
+```
 
 #### View Attributes
 
@@ -252,11 +265,13 @@ As the user progresses through the multipage form, each individual form
 page is made available in the template via the context, just as with a
 normal Django form.  A minimal implementation would be:
 
-    <form method="post" action=".">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Submit</button>
-    </form>
+```liquid
+<form method="post" action=".">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+```
 
 If a consistent layout will suffice for all of your individual form
 pages, it's enough to just define the `template_name` on the view as
@@ -266,9 +281,11 @@ However, if you require more customization for your indivdual form
 pages, you may define a `template_name` attribute on the `ChildForm`
 subclasses themselves.  In the example project we have:
 
-    class Stage4Form(ChildForm):
-        required_fields = "__all__"
-        template_name = "job_application/form_page_w_summary.html"
+```py
+class Stage4Form(ChildForm):
+    required_fields = "__all__"
+    template_name = "job_application/form_page_w_summary.html"
+```
 
 When this form is reached, the form class's `template_name` will
 override the `template_name` defined on the view. For `ChildForm`
@@ -279,12 +296,11 @@ the `template_name` on the view.
 ### Template Tags / Special Tools
 
 This app provides some template tags that may help the user through the
-multipage process.  You can make them available by adding the line
+multipage process.  You can make them available by adding the following line to your template:
 
-    {% load multipage_form_tags %}
-
-to your template.
-
+```liquid
+{% load multipage_form_tags %}
+```
 
 #### History
 
@@ -292,14 +308,16 @@ The names of all form pages that the user has completed so far can be
 displayed as a series of hyperlinks, allowing the user to jump back and
 forth to make further changes.  The example project has:
 
-    {% get_history as links %}
-    {% if links %}
+```liquid
+{% get_history as links %}
+{% if links %}
     {% for link in links %}
-    <ul class="nav">
-      <li>{{ link }}</li>
-    </ul>
+        <ul class="nav">
+          <li>{{ link }}</li>
+        </ul>
     {% endfor %}
-    {% endif %}
+{% endif %}
+```
 
 Calling the `get_history` tag returns a list of `<span>` elements, each
 referencing one form page in the history.  Those referencing forms other
@@ -311,7 +329,9 @@ you want to change how the links are rendered, create a path to an
 overriding "history_link.html" template in your own app's "templates"
 directory.  It should look like:
 
-    <path/to/your/app>/templates/multipage_form/history_link.html
+```
+<path/to/your/app>/templates/multipage_form/history_link.html
+```
 
 
 Alternatively, if you want to access the history directly, the list is
@@ -332,30 +352,36 @@ the context for all forms other than the starting form.  Its value is
 simply the zero-indexed position of the previous form in the
 history. You can render such a link in your template like this:
 
-    {% if previous %}
+```liquid
+{% if previous %}
     <a href="?p={{ previous }}">Previous</a>
-    {% endif %}
+{% endif %}
+```
 
 
 #### Summary of User Input
 
 It may be useful to display to the user a summary of all form responses
 before the final "submit" button is clicked.  To accomplish this, you
-only need to include:
+only need to include the following in your template:
 
-    {% get_form_summary %}
-
-in your template.
+```liquid
+{% get_form_summary %}
+```
 
 For greater control over the display of the summary, create a path to an
 overriding "summary.html" template in your own app's "templates"
 directory. It should look like:
 
-    <path/to/your/app>/templates/multipage_form/summary.html
+```
+<path/to/your/app>/templates/multipage_form/summary.html
+```
 
 Please refer to the built-in template at
 
-    multipage_form/templates/multipage_form/summary.html
+```
+multipage_form/templates/multipage_form/summary.html
+```
 
 to get an idea of the nature of the summary object.
 
